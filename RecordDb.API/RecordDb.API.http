@@ -1,0 +1,6 @@
+@RecordDb.API_HostAddress = http://localhost:5171
+
+GET {{RecordDb.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
