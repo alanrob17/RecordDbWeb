@@ -98,7 +98,7 @@ namespace RecordDb.API.Controllers
                 Biography = artist.Biography
             };
 
-            return CreatedAtAction(nameof(GetById), new {id = artistDto.ArtistId}, artistDto );
+            return CreatedAtAction(nameof(GetById), new { id = artistDto.ArtistId }, artistDto);
         }
     }
 }
