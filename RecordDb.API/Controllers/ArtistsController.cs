@@ -58,7 +58,7 @@ namespace RecordDb.API.Controllers
             }
 
             // Map Artist Domain model to ArtistDto
-            var artistDto = new ArtistDto 
+            var artistDto = new ArtistDto
             {
                 ArtistId = artist.ArtistId,
                 FirstName = artist.FirstName,
@@ -99,6 +99,67 @@ namespace RecordDb.API.Controllers
             };
 
             return CreatedAtAction(nameof(GetById), new { id = artistDto.ArtistId }, artistDto);
+        }
+
+        // PUT: https://localhost:1234/api/artists/114
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateArtistDto updateArtistDto)
+        {
+            var artist = dbContext.Artist.Find(id);
+
+            if (artist == null)
+            {
+                return NotFound($"Artist with the Id {id} note found!");
+            }
+
+            // Map DTO to Domain Model
+            artist.FirstName = updateArtistDto.FirstName;
+            artist.LastName = updateArtistDto.LastName;
+            artist.Name = updateArtistDto.Name;
+            artist.Biography = updateArtistDto.Biography;
+
+            await dbContext.SaveChangesAsync();
+
+            // Convert Domain Model to DTO
+            var artistDto = new ArtistDto
+            {
+                ArtistId = artist.ArtistId,
+                FirstName = artist.FirstName,
+                LastName = artist.LastName,
+                Name = artist.Name,
+                Biography = artist.Biography
+            };
+
+            return Ok(artistDto);
+        }
+
+        // DELETE: https://localhost:1234/api/artists/114
+        [HttpDelete]
+        [Route("{id:int}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            var artist = dbContext.Artist.Find(id);
+
+            if (artist == null)
+            {
+                return NotFound($"Artist with Id: {id} not found!");
+            }
+
+            dbContext.Artist.Remove(artist);
+            dbContext.SaveChanges();
+
+            // Map the Domain Model to DTO
+            var artistDto = new ArtistDto
+            {
+                ArtistId = artist.ArtistId,
+                FirstName = artist.FirstName,
+                LastName = artist.LastName,
+                Name = artist.Name,
+                Biography = artist.Biography
+            };
+
+            return Ok(artistDto);
         }
     }
 }
