@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecordDb.API.Data;
@@ -13,10 +14,12 @@ namespace RecordDb.API.Controllers
     public class ArtistsController : ControllerBase
     {
         private readonly IArtistRepository artistRepository;
+        private readonly IMapper mapper;
 
-        public ArtistsController(IArtistRepository artistRepository)
+        public ArtistsController(IArtistRepository artistRepository, IMapper mapper)
         {
             this.artistRepository = artistRepository;
+            this.mapper = mapper;
         }
 
         // GET: https://localhost:1234/api/artists
@@ -25,24 +28,9 @@ namespace RecordDb.API.Controllers
         {
             // GET data from the database - Domain Model
             var artists = await artistRepository.GetAllAsync();
-
-            // MAP Domain Model to DTO
-            var artistsDto = new List<ArtistDto>();
-
-            foreach (var artist in artists)
-            {
-                artistsDto.Add(new ArtistDto()
-                {
-                    ArtistId = artist.ArtistId,
-                    FirstName = artist.FirstName,
-                    LastName = artist.LastName,
-                    Name = artist.Name,
-                    Biography = artist.Biography
-                });
-            }
-
+            
             // Return the DTO back to the client
-            return Ok(artistsDto);
+            return Ok(mapper.Map<List<ArtistDto>>(artists));
         }
 
         // GET: https://localhost:1234/api/artists/114
@@ -58,18 +46,8 @@ namespace RecordDb.API.Controllers
                 return NotFound($"An Artist with Id: {id} wasn't found!");
             }
 
-            // Map Artist Domain model to ArtistDto
-            var artistDto = new ArtistDto
-            {
-                ArtistId = artist.ArtistId,
-                FirstName = artist.FirstName,
-                LastName = artist.LastName,
-                Name = artist.Name,
-                Biography = artist.Biography
-            };
-
             // Return the DTO back to the client 
-            return Ok(artistDto);
+            return Ok(mapper.Map<ArtistDto>(artist));
         }
 
         // POST: https://localhost:1234/api/artists
@@ -77,26 +55,13 @@ namespace RecordDb.API.Controllers
         public async Task<IActionResult> Create([FromBody] AddArtistDto addArtistDto)
         {
             // Map DTO to Domain Model
-            var artist = new Artist
-            {
-                FirstName = addArtistDto.FirstName,
-                LastName = addArtistDto.LastName,
-                Name = addArtistDto.Name,
-                Biography = addArtistDto.Biography
-            };
+            var artist = mapper.Map<Artist>(addArtistDto);
 
             // Use Domain Model to create Artist
             artist = await artistRepository.CreateAsync(artist);
 
             // Map Domain model back to DTO
-            var artistDto = new ArtistDto
-            {
-                ArtistId = artist.ArtistId,
-                FirstName = artist.FirstName,
-                LastName = artist.LastName,
-                Name = artist.Name,
-                Biography = artist.Biography
-            };
+            var artistDto = mapper.Map<ArtistDto>(artist);
 
             return CreatedAtAction(nameof(GetById), new { id = artistDto.ArtistId }, artistDto);
         }
@@ -107,13 +72,7 @@ namespace RecordDb.API.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateArtistDto updateArtistDto)
         {
             // Map DTO to Domain Model
-            var artist = new Artist
-            {
-                FirstName = updateArtistDto.FirstName,
-                LastName = updateArtistDto.LastName,
-                Name = updateArtistDto.Name,
-                Biography = updateArtistDto.Biography
-            };
+            var artist = mapper.Map<Artist>(updateArtistDto);
 
             artist = await artistRepository.UpdateAsync(id, artist);
 
@@ -121,18 +80,9 @@ namespace RecordDb.API.Controllers
             {
                 return NotFound($"Artist with Id: {id} wasn't found!");
             }
-
-            // Convert Domain Model to DTO
-            var artistDto = new ArtistDto
-            {
-                ArtistId = artist.ArtistId,
-                FirstName = artist.FirstName,
-                LastName = artist.LastName,
-                Name = artist.Name,
-                Biography = artist.Biography
-            };
-
-            return Ok(artistDto);
+                        
+            // Return the DTO back to the client 
+            return Ok(mapper.Map<ArtistDto>(artist));
         }
 
         // DELETE: https://localhost:1234/api/artists/114
@@ -147,17 +97,8 @@ namespace RecordDb.API.Controllers
                 return NotFound($"Artist with Id: {id} not found!");
             }
 
-            // Map the Domain Model to DTO
-            var artistDto = new ArtistDto
-            {
-                ArtistId = artist.ArtistId,
-                FirstName = artist.FirstName,
-                LastName = artist.LastName,
-                Name = artist.Name,
-                Biography = artist.Biography
-            };
-
-            return Ok(artistDto);
+            // Return the DTO back to the client 
+            return Ok(mapper.Map<ArtistDto>(artist));
         }
     }
 }

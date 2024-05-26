@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using RecordDb.API.Data;
+using RecordDb.API.Mappings;
 using RecordDb.API.SQLRepository;
 
 namespace RecordDb.API
@@ -22,6 +23,8 @@ namespace RecordDb.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("RecordDb")));
 
             builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
+
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
             var app = builder.Build();
 
