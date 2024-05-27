@@ -23,6 +23,7 @@ namespace RecordDb.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("RecordDb")));
 
             builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
+            builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 

@@ -11,6 +11,9 @@ namespace RecordDb.API.Mappings
             CreateMap<Artist, ArtistDto>().ReverseMap();
             CreateMap<AddArtistDto, Artist>().ReverseMap();
             CreateMap<UpdateArtistDto, Artist>().ReverseMap();
+            CreateMap<Record, RecordDto>().ReverseMap();
+            CreateMap<AddRecordDto, Record>().ReverseMap();
+            CreateMap<UpdateRecordDto, Record>().ReverseMap();
         }
     }
 }
