@@ -28,7 +28,7 @@ namespace RecordDb.API.SQLRepository
 
         public async Task<Record?> GetByIdAsync(int id)
         {
-            return await dbContext.Record.FirstOrDefaultAsync(r => r.RecordId == id);
+            return await dbContext.Record.Include("Artist").FirstOrDefaultAsync(r => r.RecordId == id);
         }
 
         public async Task<Record?> UpdateAsync(int id, Record record)

@@ -31,5 +31,7 @@ namespace RecordDb.API.Models.DTO
         public string? CoverName { get; set; }
 
         public string? Review { get; set; }
+
+        public ArtistDto Artist { get; set; }
     }
 }

@@ -45,5 +45,11 @@ namespace RecordDb.API.Models.Domain
         public string? Review { get; set; }
 
         #endregion
-    }
+        
+        #region " Navigation Properties "
+
+        public Artist Artist { get; set; }
+
+        #endregion
+    }   
 }

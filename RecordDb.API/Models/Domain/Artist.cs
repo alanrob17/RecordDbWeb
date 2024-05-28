@@ -20,6 +20,5 @@ namespace RecordDb.API.Models.Domain
         public string? Biography { get; set; }
 
         #endregion
-
     }
 }

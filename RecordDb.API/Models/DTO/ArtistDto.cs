@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RecordDb.API.Models.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace RecordDb.API.Models.DTO
 {
