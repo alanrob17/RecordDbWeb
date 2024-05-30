@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RecordDb.API.CustomActionFilters;
 using RecordDb.API.Data;
 using RecordDb.API.Models.Domain;
 using RecordDb.API.Models.DTO;
@@ -25,6 +26,7 @@ namespace RecordDb.API.Controllers
 
         // POST: https://localhost:1234/api/records
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddRecordDto addRecordDto)
         {
             // Map DTO to Domain Model
@@ -70,6 +72,7 @@ namespace RecordDb.API.Controllers
         // PUT: https://localhost:1234/api/artists/114
         [HttpPut]
         [Route("{id:int}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRecordDto updateRecordDto)
         {
             // Map DTO to Domain Model
