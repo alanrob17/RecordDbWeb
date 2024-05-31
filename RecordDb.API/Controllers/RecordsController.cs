@@ -24,29 +24,12 @@ namespace RecordDb.API.Controllers
             this.mapper = mapper;
         }
 
-        // POST: https://localhost:1234/api/records
-        [HttpPost]
-        [ValidateModel]
-        public async Task<IActionResult> Create([FromBody] AddRecordDto addRecordDto)
-        {
-            // Map DTO to Domain Model
-            var record = mapper.Map<Record>(addRecordDto);
-
-            // Use Domain Model to create Artist
-            record = await recordRepository.CreateAsync(record);
-
-            // Map Domain model back to DTO
-            var recordDto = mapper.Map<RecordDto>(record);
-
-            return CreatedAtAction(nameof(GetById), new { id = recordDto.ArtistId }, recordDto);
-        }
-
-        // GET: https://localhost:1234/api/records
+        // GET: https://localhost:1234/api/records?filterOn=field&filterQuery=recorded&sortOn=name&isAscending
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool isAscending)
         {
             // GET data from the database - Domain Model
-            var records = await recordRepository.GetAllAsync();
+            var records = await recordRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending);
 
             // Return the DTO back to the client
             return Ok(mapper.Map<List<RecordDto>>(records));
@@ -67,6 +50,23 @@ namespace RecordDb.API.Controllers
 
             // Return the DTO back to the client 
             return Ok(mapper.Map<RecordDto>(record));
+        }
+
+        // POST: https://localhost:1234/api/records
+        [HttpPost]
+        [ValidateModel]
+        public async Task<IActionResult> Create([FromBody] AddRecordDto addRecordDto)
+        {
+            // Map DTO to Domain Model
+            var record = mapper.Map<Record>(addRecordDto);
+
+            // Use Domain Model to create Artist
+            record = await recordRepository.CreateAsync(record);
+
+            // Map Domain model back to DTO
+            var recordDto = mapper.Map<RecordDto>(record);
+
+            return CreatedAtAction(nameof(GetById), new { id = recordDto.ArtistId }, recordDto);
         }
 
         // PUT: https://localhost:1234/api/artists/114

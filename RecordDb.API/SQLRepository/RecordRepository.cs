@@ -8,7 +8,7 @@ namespace RecordDb.API.SQLRepository
     {
         private readonly RecordDbContext dbContext;
 
-        public RecordRepository(RecordDbContext dbContext) 
+        public RecordRepository(RecordDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -21,9 +21,77 @@ namespace RecordDb.API.SQLRepository
             return record;
         }
 
-        public async Task<List<Record>> GetAllAsync()
+        public async Task<List<Record>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string?
+            sortBy = null, bool isAscending = true)
         {
-            return await dbContext.Record.ToListAsync();
+            var records = dbContext.Record.Include("Artist").AsQueryable();
+
+            // Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                records = FilterRecords(records, filterOn, filterQuery);
+            }
+            else
+            {
+                records = RemoveTextFields(records);
+            }
+
+            // Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("Recorded", StringComparison.OrdinalIgnoreCase))
+                {
+                    records = isAscending ? records.OrderBy(r => r.Recorded) : records.OrderByDescending(r => r.Recorded);
+                }
+            }
+
+            return await records.ToListAsync();
+        }
+
+        private IQueryable<Record> FilterRecords(IQueryable<Record> records, string filterOn, string filterQuery)
+        {
+            if (filterOn.Equals("Field", StringComparison.OrdinalIgnoreCase))
+            {
+                records = records.Where(r => r.Field.Contains(filterQuery));
+            }
+            else if (filterOn.Equals("Media", StringComparison.OrdinalIgnoreCase))
+            {
+                records = records.Where(r => r.Media.Contains(filterQuery));
+            }
+            else if (filterOn.Equals("Review", StringComparison.OrdinalIgnoreCase))
+            {
+                string pattern = "%" + filterQuery + "%";
+                records = records.Where(r => EF.Functions.Like(r.Review, pattern));
+            }
+            else if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+            {
+                string pattern = "%" + filterQuery + "%";
+                records = records.Where(r => EF.Functions.Like(r.Name, pattern));
+            }
+            else if (filterOn.Equals("ArtistName", StringComparison.OrdinalIgnoreCase))
+            {
+                string pattern = "%" + filterQuery + "%";
+                records = records.Where(r => EF.Functions.Like(r.Artist.Name, pattern));
+            }
+            else if (filterOn.Equals("Recorded", StringComparison.OrdinalIgnoreCase))
+            {
+                records = records.Where(r => r.Recorded.Equals(int.Parse(filterQuery)));
+            }
+
+            records = RemoveTextFields(records);
+
+            return records;
+        }
+
+        private IQueryable<Record> RemoveTextFields(IQueryable<Record> records)
+        {
+            foreach (Record record in records) 
+            { 
+                record.Review = null;
+                record.Artist.Biography = null;
+            }
+
+            return records;
         }
 
         public async Task<Record?> GetByIdAsync(int id)

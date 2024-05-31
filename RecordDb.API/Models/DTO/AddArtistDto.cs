@@ -9,7 +9,7 @@ namespace RecordDb.API.Models.DTO
 
         [Required]
         [MaxLength(50, ErrorMessage ="Artist LastName can't be larger than 50 characters!")]
-        public string LastName { get; set; } // not null
+        public string LastName { get; set; }
 
         [Required]
         [MaxLength(50, ErrorMessage ="Artist LastName can't be larger than 50 characters!")]

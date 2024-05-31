@@ -1,10 +1,11 @@
-﻿using RecordDb.API.Models.Domain;
+﻿using Microsoft.AspNetCore.Mvc;
+using RecordDb.API.Models.Domain;
 
 namespace RecordDb.API.SQLRepository
 {
     public interface IRecordRepository
     {
-        Task<List<Record>> GetAllAsync();
+        Task<List<Record>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true);
 
         Task<Record?> GetByIdAsync(int id);
 

@@ -66,8 +66,6 @@ namespace RecordDb.API.Controllers
             var artistDto = mapper.Map<ArtistDto>(artist);
 
             return CreatedAtAction(nameof(GetById), new { id = artistDto.ArtistId }, artistDto);
-
-            return BadRequest(ModelState);
         }
 
         // PUT: https://localhost:1234/api/artists/114
