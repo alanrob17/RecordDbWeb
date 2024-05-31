@@ -31,10 +31,6 @@ namespace RecordDb.API.SQLRepository
             {
                 records = FilterRecords(records, filterOn, filterQuery);
             }
-            else
-            {
-                records = RemoveTextFields(records);
-            }
 
             // Sorting
             if (string.IsNullOrWhiteSpace(sortBy) == false)
@@ -77,8 +73,6 @@ namespace RecordDb.API.SQLRepository
             {
                 records = records.Where(r => r.Recorded.Equals(int.Parse(filterQuery)));
             }
-
-            records = RemoveTextFields(records);
 
             return records;
         }

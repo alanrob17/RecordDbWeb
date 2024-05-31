@@ -32,7 +32,7 @@ namespace RecordDb.API.Controllers
             var records = await recordRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending);
 
             // Return the DTO back to the client
-            return Ok(mapper.Map<List<RecordDto>>(records));
+            return Ok(mapper.Map<List<RecordQueryDto>>(records));
         }
 
         // GET: https://localhost:1234/api/artists/114
