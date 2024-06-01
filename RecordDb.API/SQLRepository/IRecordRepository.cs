@@ -5,7 +5,7 @@ namespace RecordDb.API.SQLRepository
 {
     public interface IRecordRepository
     {
-        Task<List<Record>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true);
+        Task<List<Record>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 15);
 
         Task<Record?> GetByIdAsync(int id);
 

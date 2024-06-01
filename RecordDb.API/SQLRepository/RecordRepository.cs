@@ -22,7 +22,7 @@ namespace RecordDb.API.SQLRepository
         }
 
         public async Task<List<Record>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string?
-            sortBy = null, bool isAscending = true)
+            sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 15)
         {
             var records = dbContext.Record.Include("Artist").AsQueryable();
 
@@ -41,7 +41,10 @@ namespace RecordDb.API.SQLRepository
                 }
             }
 
-            return await records.ToListAsync();
+            // Pagination
+            var skipResults = (pageNumber - 1) * pageSize;
+
+            return await records.Skip(skipResults).Take(pageSize).ToListAsync();
         }
 
         private IQueryable<Record> FilterRecords(IQueryable<Record> records, string filterOn, string filterQuery)

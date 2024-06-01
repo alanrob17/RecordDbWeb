@@ -24,12 +24,14 @@ namespace RecordDb.API.Controllers
             this.mapper = mapper;
         }
 
-        // GET: https://localhost:1234/api/records?filterOn=field&filterQuery=recorded&sortOn=name&isAscending
+        // GET: https://localhost:1234/api/records?filterOn=field&filterQuery=recorded&sortOn=name&isAscending=true&pageNumber=1,pageSize=15
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool isAscending)
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, 
+            [FromQuery] string? sortBy, [FromQuery] bool? isAscending, 
+            [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 15)
         {
             // GET data from the database - Domain Model
-            var records = await recordRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending);
+            var records = await recordRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
 
             // Return the DTO back to the client
             return Ok(mapper.Map<List<RecordQueryDto>>(records));
