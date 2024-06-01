@@ -35,9 +35,9 @@ namespace RecordDb.API.SQLRepository
             // Sorting
             if (string.IsNullOrWhiteSpace(sortBy) == false)
             {
-                if (sortBy.Equals("Recorded", StringComparison.OrdinalIgnoreCase))
+                if (sortBy.Equals("artistName", StringComparison.OrdinalIgnoreCase))
                 {
-                    records = isAscending ? records.OrderBy(r => r.Recorded) : records.OrderByDescending(r => r.Recorded);
+                    records = isAscending ? records.OrderBy(r => r.Artist.LastName).ThenBy(r => r.Artist.FirstName).ThenBy(r => r.Recorded) : records.OrderBy(r => r.Artist.LastName).ThenBy(r => r.Artist.FirstName).ThenByDescending(r => r.Recorded);
                 }
             }
 
