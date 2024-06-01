@@ -36,9 +36,34 @@ namespace RecordDb.API.SQLRepository
             return artist;
         }
 
-        public async Task<List<Artist>> GetAllAsync()
+        public async Task<List<Artist>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 15)
         {
-            return await dbContext.Artist.ToListAsync();
+            var artists = dbContext.Artist.AsQueryable();
+
+            // Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    string pattern = "%" + filterQuery + "%";
+                    artists = artists.Where(r => EF.Functions.Like(r.Name, pattern));
+                }
+
+            }
+
+            // Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    artists = isAscending ? artists.OrderBy(r => r.LastName).ThenBy(r => r.FirstName) : artists.OrderByDescending(r => r.LastName).ThenBy(r => r.FirstName);
+                }
+            }
+
+            // Pagination
+            var skipResults = (pageNumber - 1) * pageSize;
+
+            return await artists.Skip(skipResults).Take(pageSize).ToListAsync();
         }
 
         public async Task<Artist?> GetByIdAsync(int id)
