@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using RecordDb.API.Data;
 using RecordDb.API.Mappings;
+using RecordDb.API.Middleware;
 using RecordDb.API.SQLRepository;
+using Serilog;
 
 namespace RecordDb.API
 {
@@ -13,6 +15,16 @@ namespace RecordDb.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            var logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("Logs/recorddbLog.txt", rollingInterval: RollingInterval.Day)
+                .MinimumLevel.Warning()
+                .CreateLogger();
+
+            builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -36,10 +48,11 @@ namespace RecordDb.API
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandler>();
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

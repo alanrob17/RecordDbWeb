@@ -7,6 +7,8 @@ using RecordDb.API.Data;
 using RecordDb.API.Models.Domain;
 using RecordDb.API.Models.DTO;
 using RecordDb.API.SQLRepository;
+using Serilog.Data;
+using System.Text.Json;
 
 namespace RecordDb.API.Controllers
 {
@@ -16,11 +18,13 @@ namespace RecordDb.API.Controllers
     {
         private readonly IArtistRepository artistRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<ArtistsController> logger;
 
-        public ArtistsController(IArtistRepository artistRepository, IMapper mapper)
+        public ArtistsController(IArtistRepository artistRepository, IMapper mapper, ILogger<ArtistsController> logger)
         {
             this.artistRepository = artistRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         // GET: https://localhost:1234/api/artists?filterOn=field&filterQuery=recorded&sortOn=name&isAscending=true&pageNumber=1,pageSize=15
@@ -29,6 +33,8 @@ namespace RecordDb.API.Controllers
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 15)
         {
+            throw new Exception("Heck, something has broken!");
+
             // GET data from the database - Domain Model
             var artists = await artistRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
 
@@ -38,7 +44,7 @@ namespace RecordDb.API.Controllers
 
         // GET: https://localhost:1234/api/artists/114
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int}")] 
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             // GET Artist Domain mode from database
@@ -48,6 +54,8 @@ namespace RecordDb.API.Controllers
             {
                 return NotFound($"An Artist with Id: {id} wasn't found!");
             }
+
+            logger.LogError("Bad error!");
 
             // Return the DTO back to the client 
             return Ok(mapper.Map<ArtistDto>(artist));
