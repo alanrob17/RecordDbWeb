@@ -33,8 +33,6 @@ namespace RecordDb.API.Controllers
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 15)
         {
-            throw new Exception("Heck, something has broken!");
-
             // GET data from the database - Domain Model
             var artists = await artistRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
 
