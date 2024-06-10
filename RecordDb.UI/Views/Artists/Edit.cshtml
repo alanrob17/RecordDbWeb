@@ -1,0 +1,51 @@
+﻿@model RecordDb.UI.Models.DTO.ArtistDto
+
+@{
+    ViewData["Title"] = "Edit Artist";
+}
+
+<h3 class="mt-3">Edit Artist</h3>
+
+<form method="post">
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="mt-3">
+                <label class="form-label">Id</label>
+                <input type="text" class="form-control" asp-for="ArtistId" readonly />
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">First name</label>
+                <input type="text" class="form-control" asp-for="FirstName" />
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">Last name</label>
+                <input type="text" class="form-control" asp-for="LastName" />
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" asp-for="Name" />
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Biography" class="control-label"></label>
+                <textarea asp-for="Biography" class="form-control" rows="6"></textarea>
+            </div>
+
+            <div class="mt-3 d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Save</button>
+
+                <button type="submit" asp-controller="Artists"
+                        asp-action="Delete"
+                        class="btn btn-danger">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+</form>

@@ -1,0 +1,30 @@
+﻿@model RecordDb.UI.Models.DTO.ArtistDto
+
+@{
+    ViewData["Title"] = "Artist Details";
+}
+
+<h3>Artist details</h3>
+
+<div>
+    <h4>Artist view</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            <h4>@Html.DisplayFor(model => model.Name)</h4>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Biography)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.Biography)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ArtistId }) |
+    <a asp-action="Index">Back to List</a>
+</div>

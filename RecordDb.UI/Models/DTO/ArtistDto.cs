@@ -14,5 +14,7 @@ namespace RecordDb.UI.Models.DTO
 
         [Required]
         public string Name { get; set; }
+
+        public string? Biography { get; set; }
     }
 }
